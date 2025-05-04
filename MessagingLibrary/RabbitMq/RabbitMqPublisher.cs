@@ -22,7 +22,7 @@ public class RabbitMqPublisher : IMessagePublisher, IDisposable
         _channel.ExchangeDeclare(exchange: _exchange, type: ExchangeType.Topic, durable: true);
     }
 
-    public Task PublishAsync(string message, string routingKey)
+    public Task PublishAsync(string routingKey, object message)
     {
         var json = JsonSerializer.Serialize(message);
         var body = Encoding.UTF8.GetBytes(json);
