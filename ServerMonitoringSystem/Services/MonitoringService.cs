@@ -25,7 +25,7 @@ public class MonitoringService
 
             _publisher.PublishAsync(topic, stats);
 
-            Console.WriteLine($"Published stats for {_config.ServerIdentifier}: CPU {stats.CpuUsage}% - Memory {stats.MemoryUsage}MB");
+            Console.WriteLine($"Published stats for {_config.ServerIdentifier}: CPU {stats.CpuUsage}% - Memory {stats.MemoryUsage}MB - AvailableMemory {stats.AvailableMemory}MB");
 
             await Task.Delay(_config.SamplingIntervalSeconds * 1000);
         }
