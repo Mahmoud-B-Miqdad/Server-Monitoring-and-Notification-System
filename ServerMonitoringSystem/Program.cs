@@ -1,8 +1,8 @@
 ﻿using MessagingLibrary.Interfaces;
 using MessagingLibrary.RabbitMq;
 using Microsoft.Extensions.Configuration;
-using ServerMonitoringSystem.Configuration;
 using ServerMonitoringSystem.Services;
+using ServerMonitoringSystem.Shared.Configuration;
 
 var builder = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())

@@ -1,4 +1,4 @@
-﻿namespace ServerMonitoringSystem.Configuration;
+﻿namespace ServerMonitoringSystem.Shared.Configuration;
 
 public class ServerStatisticsConfig
 {

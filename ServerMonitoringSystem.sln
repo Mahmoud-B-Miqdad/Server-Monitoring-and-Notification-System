@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerMonitoringSystem.Mess
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessagingLibrary", "MessagingLibrary\MessagingLibrary.csproj", "{3C401F93-2775-4176-BA30-BA1825ECCA67}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem.MessageProcessor", "ServerMonitoringSystem.MessageProcessor\ServerMonitoringSystem.MessageProcessor.csproj", "{8DE4A534-9939-4AED-B939-8CEA66283DFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem.Shared", "ServerMonitoringSystem.Shared\ServerMonitoringSystem.Shared.csproj", "{C974EB10-FE08-4AE7-9761-304ECEE4FED9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{3C401F93-2775-4176-BA30-BA1825ECCA67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C401F93-2775-4176-BA30-BA1825ECCA67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C401F93-2775-4176-BA30-BA1825ECCA67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DE4A534-9939-4AED-B939-8CEA66283DFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DE4A534-9939-4AED-B939-8CEA66283DFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DE4A534-9939-4AED-B939-8CEA66283DFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DE4A534-9939-4AED-B939-8CEA66283DFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C974EB10-FE08-4AE7-9761-304ECEE4FED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C974EB10-FE08-4AE7-9761-304ECEE4FED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C974EB10-FE08-4AE7-9761-304ECEE4FED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C974EB10-FE08-4AE7-9761-304ECEE4FED9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

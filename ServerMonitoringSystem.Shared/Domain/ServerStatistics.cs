@@ -1,4 +1,4 @@
-﻿namespace ServerMonitoringSystem.Domain;
+﻿namespace ServerMonitoringSystem.Shared.Domain;
 
 public class ServerStatistics
 {

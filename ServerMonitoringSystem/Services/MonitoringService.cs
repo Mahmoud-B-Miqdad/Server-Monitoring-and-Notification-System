@@ -1,6 +1,6 @@
-﻿using ServerMonitoringSystem.Configuration;
-using MessagingLibrary.Interfaces;
-using ServerMonitoringSystem.Domain;
+﻿using MessagingLibrary.Interfaces;
+using ServerMonitoringSystem.Shared.Configuration;
+using ServerMonitoringSystem.Shared.Domain;
 
 namespace ServerMonitoringSystem.Services;
 

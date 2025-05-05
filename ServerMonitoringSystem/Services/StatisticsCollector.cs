@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using ServerMonitoringSystem.Domain;
+using ServerMonitoringSystem.Shared.Domain;
 
 namespace ServerMonitoringSystem.Services;
 
