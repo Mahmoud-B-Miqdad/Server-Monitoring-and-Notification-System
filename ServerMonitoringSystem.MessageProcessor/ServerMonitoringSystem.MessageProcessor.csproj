@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MessagingLibrary\MessagingLibrary.csproj" />
+    <ProjectReference Include="..\ServerMonitoringSystem.Shared\ServerMonitoringSystem.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
