@@ -3,16 +3,18 @@ using MongoDB.Driver;
 using ServerMonitoringSystem.Shared.Domain;
 
 namespace ServerMonitoringSystem.MessageProcessor.Persistence;
-
-public class MongoDbStatisticsRepository : IStatisticsRepository
+internal class MongoDbStatisticsRepository : IStatisticsRepository
 {
     private readonly IMongoCollection<ServerStatistics> _statisticsCollection;
 
     public MongoDbStatisticsRepository(IConfiguration configuration)
     {
-        var client = new MongoClient(configuration.GetConnectionString("MongoDbConnection"));
-        var database = client.GetDatabase("ServerMonitoring");
-        _statisticsCollection = database.GetCollection<ServerStatistics>("Statistics");
+        var DatabaseConnection = "MongoDbConnection";
+        var DatabaseName = "ServerMonitoring";
+        var CollectionName = "Statistics";
+        var client = new MongoClient(configuration.GetConnectionString(DatabaseConnection));
+        var database = client.GetDatabase(DatabaseName);
+        _statisticsCollection = database.GetCollection<ServerStatistics>(CollectionName);
     }
 
     public async Task SaveStatisticsAsync(ServerStatistics stats)
