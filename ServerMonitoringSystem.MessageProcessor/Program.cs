@@ -56,7 +56,13 @@ services.AddSingleton<IMessageProcessor>(provider =>
 var serviceProvider = services.BuildServiceProvider();
 
 var processor = serviceProvider.GetRequiredService<IMessageProcessor>();
-await processor.StartAsync();
+var startedSuccessfully = await processor.StartAsync();
+
+if (!startedSuccessfully)
+{
+    Console.WriteLine("Failed to connect to the SignalR server. Make sure the service is running and try again.");
+    return;
+}
 
 Console.WriteLine("Listening to server statistics. Press any key to exit...");
 Console.ReadKey();

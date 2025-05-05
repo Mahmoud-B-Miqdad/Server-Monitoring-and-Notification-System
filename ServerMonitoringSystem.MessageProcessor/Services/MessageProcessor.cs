@@ -22,9 +22,12 @@ public class MessageProcessor : IMessageProcessor
         _notifier = notifier;
     }
 
-    public async Task StartAsync()
+    public async Task<bool> StartAsync()
     {
-        await _notifier.StartAsync();
+        var signalRStarted = await _notifier.StartAsync();
+
+        if (!signalRStarted)
+            return false;
 
         await _consumer.StartConsumingAsync(async (message) =>
         {
@@ -35,5 +38,6 @@ public class MessageProcessor : IMessageProcessor
                 var alerts = _anomalyDetector.Analyze(stats);
             }
         });
+        return true;
     }
 }

@@ -14,11 +14,29 @@ public class SignalRAlertSender : ISignalRAlertSender
             .Build();
     }
 
-    public async Task StartAsync()
+    public async Task<bool> StartAsync()
     {
-        await _connection.StartAsync();
-        //Console.WriteLine("SignalR connected");
+        const int maxRetries = 5;
+        const int delayMilliseconds = 2000;
+
+        for (int attempt = 1; attempt <= maxRetries; attempt++)
+        {
+            try
+            {
+                await _connection.StartAsync();
+                return true; 
+            }
+            catch
+            {
+                if (attempt == maxRetries)
+                    return false; 
+                await Task.Delay(delayMilliseconds);
+            }
+        }
+
+        return false;
     }
+
 
     public async Task SendAlertAsync(string serverId, string alertType, DateTime timestamp)
     {

@@ -2,7 +2,7 @@
 {
     public interface ISignalRAlertSender
     {
-        Task StartAsync();
+        Task<bool> StartAsync();
         Task SendAlertAsync(string serverId, string alertType, DateTime timestamp);
         Task StopAsync();
     }

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem.Mess
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem.Shared", "ServerMonitoringSystem.Shared\ServerMonitoringSystem.Shared.csproj", "{C974EB10-FE08-4AE7-9761-304ECEE4FED9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem.SignalRHub", "ServerMonitoringSystem.SignalRHub\ServerMonitoringSystem.SignalRHub.csproj", "{87588037-8370-45B7-8F49-1AD0DEB47BE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C974EB10-FE08-4AE7-9761-304ECEE4FED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C974EB10-FE08-4AE7-9761-304ECEE4FED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C974EB10-FE08-4AE7-9761-304ECEE4FED9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87588037-8370-45B7-8F49-1AD0DEB47BE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87588037-8370-45B7-8F49-1AD0DEB47BE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87588037-8370-45B7-8F49-1AD0DEB47BE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87588037-8370-45B7-8F49-1AD0DEB47BE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
