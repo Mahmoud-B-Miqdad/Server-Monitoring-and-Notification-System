@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using ServerMonitoringSystem.MessageProcessor.Configuration;
+using ServerMonitoringSystem.MessageProcessor.Persistence;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -14,3 +16,8 @@ var anomalyConfig = configuration
 var signalRConfig = configuration
     .GetSection("SignalRConfig")
     .Get<SignalRConfig>();
+
+var services = new ServiceCollection();
+services.AddSingleton<IStatisticsRepository, MongoDbStatisticsRepository>();
+
+var serviceProvider = services.BuildServiceProvider();
