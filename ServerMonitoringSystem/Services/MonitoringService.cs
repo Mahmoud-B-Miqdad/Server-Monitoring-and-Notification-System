@@ -1,9 +1,10 @@
 ﻿using ServerMonitoringSystem.Configuration;
 using MessagingLibrary.Interfaces;
+using ServerMonitoringSystem.Domain;
 
 namespace ServerMonitoringSystem.Services;
 
-public class MonitoringService
+public class MonitoringService : IMonitoringService
 {
     private readonly StatisticsCollector _collector;
     private readonly IMessagePublisher _publisher;
@@ -16,18 +17,16 @@ public class MonitoringService
         _config = config;
     }
 
-    public async Task RunAsync()
+    public async Task<ServerStatistics> RunAsync()
     {
         while (true)
         {
             var stats = _collector.Collect();
             var topic = $"ServerStatistics.{_config.ServerIdentifier}";
 
-            _publisher.PublishAsync(topic, stats);
+            await _publisher.PublishAsync(topic, stats);
 
-            Console.WriteLine($"Published stats for {_config.ServerIdentifier}: CPU {stats.CpuUsage}% - Memory {stats.MemoryUsage}MB - AvailableMemory {stats.AvailableMemory}MB");
-
-            await Task.Delay(_config.SamplingIntervalSeconds * 1000);
+            return stats;
         }
     }
 }

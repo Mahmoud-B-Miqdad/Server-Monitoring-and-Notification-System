@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem", "ServerMonitoringSystem\ServerMonitoringSystem.csproj", "{FF294E1C-DF1C-4F49-9C92-8C981E90645E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerMonitoringSystem.MessagePublisher", "ServerMonitoringSystem\ServerMonitoringSystem.MessagePublisher.csproj", "{FF294E1C-DF1C-4F49-9C92-8C981E90645E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingLibrary", "MessagingLibrary\MessagingLibrary.csproj", "{3C401F93-2775-4176-BA30-BA1825ECCA67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessagingLibrary", "MessagingLibrary\MessagingLibrary.csproj", "{3C401F93-2775-4176-BA30-BA1825ECCA67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

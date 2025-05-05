@@ -16,4 +16,19 @@ var collector = new StatisticsCollector();
 IMessagePublisher publisher = new RabbitMqPublisher("localhost", "ServerExchange");
 var monitoringService = new MonitoringService(collector, publisher, config);
 
-await monitoringService.RunAsync();
+try
+{
+    while (true)
+    {
+        var stats = await monitoringService.RunAsync();
+
+        Console.WriteLine(
+            $"[INFO] Published stats: CPU={stats.CpuUsage}%, Memory={stats.MemoryUsage}MB, Available={stats.AvailableMemory}MB");
+
+        await Task.Delay(config.SamplingIntervalSeconds * 1000);
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"[ERROR] {DateTime.Now}: {ex.Message}");
+}

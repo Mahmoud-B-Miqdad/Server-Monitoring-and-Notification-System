@@ -3,7 +3,7 @@ using ServerMonitoringSystem.Domain;
 
 namespace ServerMonitoringSystem.Services;
 
-public class StatisticsCollector
+public class StatisticsCollector : IStatisticsCollector
 {
     private readonly PerformanceCounter _cpuCounter;
     private readonly PerformanceCounter _availableMemoryCounter;
