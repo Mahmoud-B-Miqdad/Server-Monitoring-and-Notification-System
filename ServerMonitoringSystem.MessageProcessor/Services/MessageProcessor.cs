@@ -1,10 +1,11 @@
 ﻿using MessagingLibrary.Interfaces;
 using MessagingLibrary.RabbitMq;
 using ServerMonitoringSystem.MessageProcessor.Persistence;
+using ServerMonitoringSystem.MessageProcessor.Services.Interfaces;
 using ServerMonitoringSystem.Shared.Domain;
 using System.Text.Json;
 
-public class MessageProcessor
+public class MessageProcessor : IMessageProcessor
 {
     private readonly IStatisticsRepository _repository;
     private readonly IMessageConsumer _consumer;

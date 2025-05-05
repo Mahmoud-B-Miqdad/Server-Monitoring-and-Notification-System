@@ -1,4 +1,4 @@
-﻿namespace ServerMonitoringSystem.MessageProcessor.Interfaces
+﻿namespace ServerMonitoringSystem.MessageProcessor.Services.Interfaces
 {
     public interface IMessageProcessor
     {
