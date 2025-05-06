@@ -50,7 +50,7 @@ services.AddSingleton<IMessageProcessor>(provider =>
     string queue = "ServerStatsQueue";
     string routingKey = "ServerStatistics.*";
 
-    return new MessageProcessor(repository, rabbitMqHost, exchange, queue, routingKey, anomalyDetector, notifier);
+    return new MessageProcessor(repository, rabbitMqHost, exchange, queue, routingKey, anomalyDetector, notifier, serverConfig);
 });
 
 var serviceProvider = services.BuildServiceProvider();

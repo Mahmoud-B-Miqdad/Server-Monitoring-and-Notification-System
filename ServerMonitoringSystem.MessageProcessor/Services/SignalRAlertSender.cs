@@ -1,54 +1,76 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 
-namespace ServerMonitoringSystem.MessageProcessor.Services;
-
-public class SignalRAlertSender : ISignalRAlertSender
+namespace ServerMonitoringSystem.MessageProcessor.Services
 {
-    private readonly HubConnection _connection;
-
-    public SignalRAlertSender(string signalRUrl)
+    public class SignalRAlertSender : ISignalRAlertSender
     {
-        _connection = new HubConnectionBuilder()
-            .WithUrl(signalRUrl)
-            .WithAutomaticReconnect()
-            .Build();
-    }
+        private readonly HubConnection _connection;
+        private const string AlertMethodName = "ReceiveAlert";
+        private const int SendRetryCount = 3;
+        private const int SendRetryDelayMs = 1000;
 
-    public async Task<bool> StartAsync()
-    {
-        const int maxRetries = 5;
-        const int delayMilliseconds = 2000;
-
-        for (int attempt = 1; attempt <= maxRetries; attempt++)
+        public SignalRAlertSender(string signalRUrl)
         {
-            try
+            _connection = new HubConnectionBuilder()
+                .WithUrl(signalRUrl)
+                .WithAutomaticReconnect()
+                .Build();
+        }
+
+        public async Task<bool> StartAsync()
+        {
+            const int maxRetries = 5;
+            const int delayMilliseconds = 2000;
+
+            for (int attempt = 1; attempt <= maxRetries; attempt++)
             {
-                await _connection.StartAsync();
-                return true; 
+                try
+                {
+                    await _connection.StartAsync();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+
+                    if (attempt == maxRetries)
+                        return false;
+
+                    await Task.Delay(delayMilliseconds);
+                }
             }
-            catch
+
+            return false;
+        }
+
+        public async Task SendAlertAsync(string serverId, string alertType, DateTime timestamp)
+        {
+            for (int attempt = 1; attempt <= SendRetryCount; attempt++)
             {
-                if (attempt == maxRetries)
-                    return false; 
-                await Task.Delay(delayMilliseconds);
+                if (_connection.State == HubConnectionState.Connected)
+                {
+                    try
+                    {
+                        await _connection.InvokeAsync(AlertMethodName, serverId, alertType, timestamp);
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (attempt == SendRetryCount)
+                            return;
+                        else
+                            await Task.Delay(SendRetryDelayMs);
+                    }
+                }
+                else
+                {
+                    await Task.Delay(SendRetryDelayMs);
+                }
             }
         }
 
-        return false;
-    }
-
-
-    public async Task SendAlertAsync(string serverId, string alertType, DateTime timestamp)
-    {
-        if (_connection.State == HubConnectionState.Connected)
+        public async Task StopAsync()
         {
-            var anomalyAlert = "ReceiveAlert";
-            await _connection.InvokeAsync(anomalyAlert, serverId, alertType, timestamp);
+                await _connection.StopAsync();
         }
-    }
-
-    public async Task StopAsync()
-    {
-        await _connection.StopAsync();
     }
 }

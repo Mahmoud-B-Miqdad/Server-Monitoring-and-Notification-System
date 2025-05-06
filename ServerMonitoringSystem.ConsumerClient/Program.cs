@@ -1,30 +1,32 @@
-﻿class Program
+﻿using Microsoft.Extensions.Configuration;
+using SignalREventConsumer;
+
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .Build();
+
+string hubUrl = configuration["SignalRConfig:SignalRUrl"];
+
+var client = new SignalRConsumer(hubUrl);
+
+client.RegisterAlertHandler((serverId, alertType, timestamp) =>
 {
-    static async Task Main(string[] args)
-    {
-        string signalRUrl = "https://localhost:7271/hub/alerts";
-        var consumer = new SignalRConsumer(signalRUrl);
+    Console.WriteLine($"[Alert] Server: {serverId}, Type: {alertType}, Time: {timestamp}");
+});
 
-        consumer.OnConnected += () =>
-        {
-            Console.WriteLine("Connected to SignalR hub.");
-        };
+Console.WriteLine("Connecting to SignalR hub...");
 
-        consumer.OnRetrying += (attempt) =>
-        {
-            Console.WriteLine($"Connection failed. Retrying in 2 seconds... (Attempt {attempt})");
-        };
+bool connected = await client.StartAsync();
 
-        consumer.OnAlertReceived += (serverId, alertType, timestamp) =>
-        {
-            Console.WriteLine($"Received alert: {alertType} from {serverId} at {timestamp}");
-        };
-
-        await consumer.StartAsync();
-
-        Console.WriteLine("Press any key to exit...");
-        Console.ReadKey();
-
-        await consumer.StopAsync();
-    }
+if (!connected)
+{
+    Console.WriteLine("Failed to connect after multiple attempts. Make sure the SignalR server is running.");
+    return;
 }
+
+Console.WriteLine("Connected to SignalR hub. Listening for alerts...");
+Console.WriteLine("Press any key to exit.");
+
+Console.ReadKey();
+await client.StopAsync();

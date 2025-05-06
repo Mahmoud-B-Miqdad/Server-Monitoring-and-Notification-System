@@ -1,55 +1,51 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿namespace SignalREventConsumer;
+
+using Microsoft.AspNetCore.SignalR.Client;
 
 public class SignalRConsumer
 {
     private readonly HubConnection _connection;
 
-    public event Action? OnConnected;
-    public event Action<int>? OnRetrying;
-    public event Action<string, string, DateTime>? OnAlertReceived;
-
-    public SignalRConsumer(string signalRUrl)
+    public SignalRConsumer(string hubUrl)
     {
         _connection = new HubConnectionBuilder()
-            .WithUrl(signalRUrl)
+            .WithUrl(hubUrl)
             .WithAutomaticReconnect()
             .Build();
     }
 
-    public async Task StartAsync()
+    public void RegisterAlertHandler(Action<string, string, DateTime> handler)
     {
-        var anomalyAlert = "ReceiveAlert";
-
-        _connection.On<string, string, DateTime>(anomalyAlert, (serverId, alertType, timestamp) =>
+        _connection.On<string, string, DateTime>("ReceiveAlert", (serverId, alertType, timestamp) =>
         {
-            OnAlertReceived?.Invoke(serverId, alertType, timestamp);
+            handler(serverId, alertType, timestamp);
         });
+    }
 
-        var maxAttempts = 5;
-        var attempt = 0;
-
-        while (attempt < maxAttempts)
+    public async Task<bool> StartAsync(int maxRetries = 5, int retryDelayMilliseconds = 5000)
+    {
+        for (int attempt = 1; attempt <= maxRetries; attempt++)
         {
             try
             {
                 await _connection.StartAsync();
-                OnConnected?.Invoke();
-                break;
+                return true;
             }
-            catch (HttpRequestException)
+            catch (Exception ex)
             {
-                attempt++;
-                OnRetrying?.Invoke(attempt);
-                await Task.Delay(2000);
+                if (attempt == maxRetries)
+                {
+                    throw new Exception($"Failed to connect after {maxRetries} attempts: {ex.Message}", ex);
+                }
+                else
+                {
+                    await Task.Delay(retryDelayMilliseconds);
+                }
             }
         }
 
-        await Task.Delay(-1);
+        return false;
     }
 
-
-    public async Task StopAsync()
-    {
-        await _connection.StopAsync();
-    }
+    public async Task StopAsync() => await _connection.StopAsync();
 }
