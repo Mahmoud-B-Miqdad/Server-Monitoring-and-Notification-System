@@ -14,13 +14,12 @@ public class StatisticsCollector : IStatisticsCollector
         _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
         _availableMemoryCounter = new PerformanceCounter("Memory", "Available MBytes");
         _usedMemoryCounter = new PerformanceCounter("Memory", "Committed Bytes");
+        _cpuCounter.NextValue();
     }
 
     public ServerStatistics Collect()
     {
         double cpuUsage = _cpuCounter.NextValue(); 
-        System.Threading.Thread.Sleep(500); 
-        cpuUsage = _cpuCounter.NextValue(); 
 
         double availableMemory = _availableMemoryCounter.NextValue(); 
         double committedBytes = _usedMemoryCounter.NextValue(); 
