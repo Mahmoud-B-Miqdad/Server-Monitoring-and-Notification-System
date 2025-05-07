@@ -35,4 +35,13 @@ public class StatisticsCollector : IStatisticsCollector
             Timestamp = DateTime.Now
         };
     }
+
+    public void Dispose()
+    {
+        _cpuCounter?.Dispose();
+        _availableMemoryCounter?.Dispose();
+        _usedMemoryCounter?.Dispose();
+
+        GC.SuppressFinalize(this);
+    }
 }

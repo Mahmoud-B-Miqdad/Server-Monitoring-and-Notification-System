@@ -1,6 +1,6 @@
 ﻿using ServerMonitoringSystem.Domain;
 
-public interface IStatisticsCollector
+public interface IStatisticsCollector : IDisposable
 {
     ServerStatistics Collect();
 }
