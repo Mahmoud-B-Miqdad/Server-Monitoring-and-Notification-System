@@ -19,12 +19,12 @@ public class StatisticsCollector : IStatisticsCollector
 
     public ServerStatistics Collect()
     {
-        double cpuUsage = _cpuCounter.NextValue(); 
+        var cpuUsage = _cpuCounter.NextValue(); 
 
-        double availableMemory = _availableMemoryCounter.NextValue(); 
-        double committedBytes = _usedMemoryCounter.NextValue(); 
+        var availableMemory = _availableMemoryCounter.NextValue(); 
+        var committedBytes = _usedMemoryCounter.NextValue(); 
 
-        double usedMemory = committedBytes / (1024 * 1024); 
+        var usedMemory = committedBytes / (1024 * 1024); 
 
         return new ServerStatistics
         {
