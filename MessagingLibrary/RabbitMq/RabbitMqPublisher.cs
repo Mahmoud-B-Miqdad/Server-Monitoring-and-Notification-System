@@ -5,10 +5,10 @@ using System.Text.Json;
 
 namespace MessagingLibrary.RabbitMq;
 
-public class RabbitMqPublisher : IMessagePublisher, IDisposable
+public class RabbitMqPublisher : IMessagePublisher
 {
-    private readonly IConnection _connection;
-    private readonly IModel _channel;
+
+    private readonly string _hostname;
     private readonly string _exchange;
     private readonly string _exchangeType;
 
@@ -23,31 +23,27 @@ public class RabbitMqPublisher : IMessagePublisher, IDisposable
         if (string.IsNullOrWhiteSpace(exchangeType))
             throw new ArgumentNullException(nameof(exchangeType), "Exchange type cannot be null or empty.");
 
+        _hostname = hostname;
         _exchange = exchange;
         _exchangeType = exchangeType;
-
-        var factory = new ConnectionFactory { HostName = hostname };
-        _connection = factory.CreateConnection();
-        _channel = _connection.CreateModel();
-
-        _channel.ExchangeDeclare(exchange: _exchange, type: exchangeType, durable: true);
     }
 
-    public void Publish(string routingKey, object message)
+    public void Publish<T>(string routingKey, T message)
     {
+        var factory = new ConnectionFactory { HostName = _hostname };
+
+        using var connection = factory.CreateConnection();
+        using var channel = connection.CreateModel();
+
+        channel.ExchangeDeclare(exchange: _exchange, type: _exchangeType, durable: true);
+
         var json = JsonSerializer.Serialize(message);
         var body = Encoding.UTF8.GetBytes(json);
 
-        _channel.BasicPublish(
+        channel.BasicPublish(
             exchange: _exchange,
             routingKey: routingKey,
             basicProperties: null,
             body: body);
-    }
-
-    public void Dispose()
-    {
-        _channel?.Dispose();
-        _connection?.Dispose();
     }
 }

@@ -2,5 +2,5 @@
 
 public interface IMessagePublisher
 {
-    void Publish(string routingKey, object message);
+    void Publish<T>(string routingKey, T message);
 }
