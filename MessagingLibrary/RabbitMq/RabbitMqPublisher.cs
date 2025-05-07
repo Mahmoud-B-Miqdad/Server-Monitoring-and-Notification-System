@@ -38,7 +38,7 @@ public class RabbitMqPublisher : IMessagePublisher, IDisposable
 
     public void Dispose()
     {
-        _channel?.Close();
-        _connection?.Close();
+        _channel?.Dispose();
+        _connection?.Dispose();
     }
 }
