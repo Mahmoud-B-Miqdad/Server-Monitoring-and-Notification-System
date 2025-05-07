@@ -13,7 +13,7 @@ var configuration = builder.Build();
 var config = configuration.GetSection("ServerStatisticsConfig").Get<ServerStatisticsConfig>();
 
 var collector = new StatisticsCollector();
-IMessagePublisher publisher = new RabbitMqPublisher("localhost", "ServerExchange");
+IMessagePublisher publisher = new RabbitMqPublisher("localhost", "ServerExchange", "my-exchange");
 var monitoringService = new MonitoringService(collector, publisher, config);
 
 try

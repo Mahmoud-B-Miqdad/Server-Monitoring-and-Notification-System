@@ -10,16 +10,18 @@ public class RabbitMqPublisher : IMessagePublisher, IDisposable
     private readonly IConnection _connection;
     private readonly IModel _channel;
     private readonly string _exchange;
+    private readonly string _exchangeType;
 
-    public RabbitMqPublisher(string hostname, string exchange)
+    public RabbitMqPublisher(string hostname, string exchange, string exchangeType)
     {
         _exchange = exchange;
+        _exchangeType = exchangeType;
 
         var factory = new ConnectionFactory { HostName = hostname };
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
 
-        _channel.ExchangeDeclare(exchange: _exchange, type: ExchangeType.Topic, durable: true);
+        _channel.ExchangeDeclare(exchange: _exchange, type: exchangeType, durable: true);
     }
 
     public void Publish(string routingKey, object message)
