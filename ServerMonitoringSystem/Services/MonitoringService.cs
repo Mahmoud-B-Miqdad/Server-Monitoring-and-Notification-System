@@ -19,14 +19,11 @@ public class MonitoringService : IMonitoringService
 
     public async Task<ServerStatistics> RunAsync()
     {
-        while (true)
-        {
             var stats = _collector.Collect();
             var topic = $"ServerStatistics.{_config.ServerIdentifier}";
 
             _publisher.Publish(topic, stats);
 
             return stats;
-        }
     }
 }
