@@ -14,6 +14,15 @@ public class RabbitMqPublisher : IMessagePublisher, IDisposable
 
     public RabbitMqPublisher(string hostname, string exchange, string exchangeType)
     {
+        if (string.IsNullOrWhiteSpace(hostname))
+            throw new ArgumentNullException(nameof(hostname), "Hostname cannot be null or empty.");
+
+        if (string.IsNullOrWhiteSpace(exchange))
+            throw new ArgumentNullException(nameof(exchange), "Exchange cannot be null or empty.");
+
+        if (string.IsNullOrWhiteSpace(exchangeType))
+            throw new ArgumentNullException(nameof(exchangeType), "Exchange type cannot be null or empty.");
+
         _exchange = exchange;
         _exchangeType = exchangeType;
 
