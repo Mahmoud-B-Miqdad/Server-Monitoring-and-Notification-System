@@ -41,9 +41,7 @@ public class MessageProcessor : IMessageProcessor
                 foreach (var alert in alerts)
                 {
                     await _notifier.SendAlertAsync(_serverConfig.ServerIdentifier, alert, stats.Timestamp);
-                    //Console.WriteLine($"[ALERT] {alert} on {_serverConfig.ServerIdentifier} at {stats.Timestamp}");
                 }
-
             }
         });
         return true;
