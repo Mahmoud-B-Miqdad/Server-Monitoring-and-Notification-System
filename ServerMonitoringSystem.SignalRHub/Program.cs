@@ -8,9 +8,6 @@ var app = builder.Build();
 
 app.UseRouting();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapHub<AlertHub>("/hub/alerts");
-});
+app.MapHub<AlertHub>("/hub/alerts");
 
 app.Run();
