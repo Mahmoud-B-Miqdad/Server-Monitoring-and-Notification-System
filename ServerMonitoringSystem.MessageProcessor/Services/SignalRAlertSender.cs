@@ -13,9 +13,20 @@ public class SignalRAlertSender : ISignalRAlertSender
             .WithUrl(signalRUrl)
             .WithAutomaticReconnect()
             .Build();
+
+        _connection.Closed += async (error) =>
+        {
+            await Task.Delay(3000);
+            await TryReconnectAsync();
+        };
     }
 
     public async Task<bool> StartAsync()
+    {
+        return await TryReconnectAsync();
+    }
+
+    private async Task<bool> TryReconnectAsync()
     {
         const int maxRetries = 5;
         const int delayMilliseconds = 2000;
@@ -25,12 +36,12 @@ public class SignalRAlertSender : ISignalRAlertSender
             try
             {
                 await _connection.StartAsync();
-                return true; 
+                return true;
             }
             catch
             {
                 if (attempt == maxRetries)
-                    return false; 
+                    return false;
                 await Task.Delay(delayMilliseconds);
             }
         }
