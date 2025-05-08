@@ -28,22 +28,21 @@ public class RabbitMqPublisher : IMessagePublisher
         _exchangeType = exchangeType;
     }
 
-    public void Publish<T>(string routingKey, T message)
+    public async Task PublishAsync<T>(string routingKey, T message)
     {
         var factory = new ConnectionFactory { HostName = _hostname };
 
-        using var connection = factory.CreateConnection();
-        using var channel = connection.CreateModel();
+        using var connection = await factory.CreateConnectionAsync();
+        using var channel = await connection.CreateChannelAsync();
 
-        channel.ExchangeDeclare(exchange: _exchange, type: _exchangeType, durable: true);
+        await channel.ExchangeDeclareAsync(exchange: _exchange, type: _exchangeType, durable: true);
 
         var json = JsonSerializer.Serialize(message);
         var body = Encoding.UTF8.GetBytes(json);
 
-        channel.BasicPublish(
+        await channel.BasicPublishAsync(
             exchange: _exchange,
             routingKey: routingKey,
-            basicProperties: null,
             body: body);
     }
 }

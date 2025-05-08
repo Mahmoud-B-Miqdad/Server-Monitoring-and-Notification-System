@@ -22,7 +22,7 @@ public class MonitoringService : IMonitoringService
             var stats = _collector.Collect();
             var topic = $"ServerStatistics.{_config.ServerIdentifier}";
 
-            _publisher.Publish(topic, stats);
+            await _publisher.PublishAsync(topic, stats);
 
             return stats;
     }

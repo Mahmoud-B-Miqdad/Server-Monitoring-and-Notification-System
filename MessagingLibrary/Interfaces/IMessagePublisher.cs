@@ -2,5 +2,5 @@
 
 public interface IMessagePublisher
 {
-    void Publish<T>(string routingKey, T message);
+    Task PublishAsync<T>(string routingKey, T message);
 }
