@@ -40,7 +40,22 @@ services.AddSingleton(signalRConfig);
 services.AddSingleton(serverConfig);
 services.AddSingleton(mongoDbSettings);
 services.AddScoped<IStatisticsRepository, MongoDbStatisticsRepository>();
-services.AddSingleton<IMessageConsumer, RabbitMqConsumer>();
+
+
+string rabbitMqHost = "localhost";
+string exchange = "ServerExchange";
+string queue = "ServerStatsQueue";
+string routingKey = "ServerStatistics.*";
+services.AddSingleton<IMessageConsumer>(provider =>
+{
+    return new RabbitMqConsumer(
+        hostname: rabbitMqHost,
+        exchange: exchange,
+        queue: queue,
+        routingKey: routingKey
+    );
+});
+
 services.AddSingleton<ISignalRAlertSender>(provider =>
     new SignalRAlertSender(signalRConfig.SignalRUrl));
 
@@ -50,13 +65,9 @@ services.AddSingleton<IMessageProcessor>(provider =>
     var repository = provider.GetRequiredService<IStatisticsRepository>();
     var anomalyDetector = provider.GetRequiredService<IAnomalyDetector>();
     var notifier = provider.GetRequiredService<ISignalRAlertSender>();
+    var consumer = provider.GetRequiredService<IMessageConsumer>();
 
-    string rabbitMqHost = "localhost";
-    string exchange = "ServerExchange";
-    string queue = "ServerStatsQueue";
-    string routingKey = "ServerStatistics.*";
-
-    return new MessageProcessor(repository, rabbitMqHost, exchange, queue, routingKey, anomalyDetector, notifier);
+    return new MessageProcessor(repository, anomalyDetector, notifier, consumer);
 });
 
 var serviceProvider = services.BuildServiceProvider();

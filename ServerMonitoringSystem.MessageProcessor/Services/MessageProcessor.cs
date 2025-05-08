@@ -1,5 +1,4 @@
 ﻿using MessagingLibrary.Interfaces;
-using MessagingLibrary.RabbitMq;
 using ServerMonitoringSystem.MessageProcessor.Persistence;
 using ServerMonitoringSystem.MessageProcessor.Services;
 using ServerMonitoringSystem.MessageProcessor.Services.Interfaces;
@@ -13,11 +12,11 @@ public class MessageProcessor : IMessageProcessor
     private readonly IAnomalyDetector _anomalyDetector;
     private readonly ISignalRAlertSender _notifier;
 
-    public MessageProcessor(IStatisticsRepository repository, string rabbitMqHost, string exchange, string queue, string routingKey,
-        IAnomalyDetector anomalyDetector, ISignalRAlertSender notifier)
+    public MessageProcessor(IStatisticsRepository repository,IAnomalyDetector anomalyDetector,
+        ISignalRAlertSender notifier, IMessageConsumer consumer)
     {
         _repository = repository;
-        _consumer = new RabbitMqConsumer(rabbitMqHost, exchange, queue, routingKey);
+        _consumer = consumer;
         _anomalyDetector = anomalyDetector;
         _notifier = notifier;
     }
