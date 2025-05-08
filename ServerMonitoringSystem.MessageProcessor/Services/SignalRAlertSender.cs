@@ -4,6 +4,7 @@ namespace ServerMonitoringSystem.MessageProcessor.Services;
 
 public class SignalRAlertSender : ISignalRAlertSender
 {
+    private const string ReceiveAlertMethod = "ReceiveAlert";
     private readonly HubConnection _connection;
 
     public SignalRAlertSender(string signalRUrl)
@@ -37,13 +38,11 @@ public class SignalRAlertSender : ISignalRAlertSender
         return false;
     }
 
-
     public async Task SendAlertAsync(string serverId, string alertType, DateTime timestamp)
     {
         if (_connection.State == HubConnectionState.Connected)
         {
-            var anomalyAlert = "ReceiveAlert";
-            await _connection.InvokeAsync(anomalyAlert, serverId, alertType, timestamp);
+            await _connection.InvokeAsync(ReceiveAlertMethod, serverId, alertType, timestamp);
         }
     }
 
