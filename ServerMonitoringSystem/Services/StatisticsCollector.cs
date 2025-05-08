@@ -14,18 +14,17 @@ public class StatisticsCollector : IStatisticsCollector
         _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
         _availableMemoryCounter = new PerformanceCounter("Memory", "Available MBytes");
         _usedMemoryCounter = new PerformanceCounter("Memory", "Committed Bytes");
+        _cpuCounter.NextValue();
     }
 
     public ServerStatistics Collect()
     {
-        double cpuUsage = _cpuCounter.NextValue(); 
-        System.Threading.Thread.Sleep(500); 
-        cpuUsage = _cpuCounter.NextValue(); 
+        var cpuUsage = _cpuCounter.NextValue(); 
 
-        double availableMemory = _availableMemoryCounter.NextValue(); 
-        double committedBytes = _usedMemoryCounter.NextValue(); 
+        var availableMemory = _availableMemoryCounter.NextValue(); 
+        var committedBytes = _usedMemoryCounter.NextValue(); 
 
-        double usedMemory = committedBytes / (1024 * 1024); 
+        var usedMemory = committedBytes / (1024 * 1024); 
 
         return new ServerStatistics
         {
@@ -34,5 +33,14 @@ public class StatisticsCollector : IStatisticsCollector
             MemoryUsage = usedMemory,
             Timestamp = DateTime.Now
         };
+    }
+
+    public void Dispose()
+    {
+        _cpuCounter?.Dispose();
+        _availableMemoryCounter?.Dispose();
+        _usedMemoryCounter?.Dispose();
+
+        GC.SuppressFinalize(this);
     }
 }

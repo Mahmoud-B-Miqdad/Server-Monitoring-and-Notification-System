@@ -14,9 +14,21 @@ var config = configuration.GetSection("ServerStatisticsConfig").Get<ServerStatis
 
 var collector = new StatisticsCollector();
 
-var Hostname = "localhost";
-var Exchange = "ServerExchange";
-IMessagePublisher publisher = new RabbitMqPublisher(Hostname, Exchange);
+var hostName = "localhost";
+var exchangeName = "ServerExchange";
+var exchangeType = "topic";
+
+IMessagePublisher? publisher = null;
+
+try
+{
+    publisher = new RabbitMqPublisher(hostName, exchangeName, exchangeType);
+}
+catch (ArgumentNullException ex)
+{
+    Console.WriteLine($"Configuration error: {ex.ParamName} - {ex.Message}");
+}
+
 var monitoringService = new MonitoringService(collector, publisher, config);
 
 try
