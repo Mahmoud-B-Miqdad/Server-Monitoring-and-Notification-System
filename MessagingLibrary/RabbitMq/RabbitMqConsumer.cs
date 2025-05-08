@@ -7,38 +7,40 @@ namespace MessagingLibrary.RabbitMq;
 
 public class RabbitMqConsumer : IMessageConsumer, IDisposable
 {
-    private readonly IConnection _connection;
-    private readonly IModel _channel;
     private readonly string _queue;
+    private readonly string _hostname;
+    private readonly string _exchange;
+    private readonly string _routingKey;
+    private IConnection _connection;
+    private IChannel _channel;
 
     public RabbitMqConsumer(string hostname, string exchange, string queue, string routingKey)
     {
         _queue = queue;
-
-        var factory = new ConnectionFactory { HostName = hostname };
-        _connection = factory.CreateConnection();
-        _channel = _connection.CreateModel();
-
-        _channel.ExchangeDeclare(exchange: exchange, type: ExchangeType.Topic, durable: true);
-        _channel.QueueDeclare(queue: queue, durable: true, exclusive: false, autoDelete: false);
-        _channel.QueueBind(queue: queue, exchange: exchange, routingKey: routingKey);
+        _hostname = hostname;
+        _exchange = exchange;
+        _routingKey = routingKey;
     }
 
-    public Task StartConsumingAsync(Func<string, Task> handleMessage)
+    public async Task StartConsumingAsync(Func<string, Task> handleMessage)
     {
-        var consumer = new EventingBasicConsumer(_channel);
+        var factory = new ConnectionFactory { HostName = _hostname };
+        _connection = await factory.CreateConnectionAsync();
+        _channel = await _connection.CreateChannelAsync();
 
-        consumer.Received += async (model, ea) =>
+        await _channel.ExchangeDeclareAsync(exchange: _exchange, type: ExchangeType.Topic, durable: true);
+        await _channel.QueueDeclareAsync(queue: _queue, durable: true, exclusive: false, autoDelete: false);
+        await _channel.QueueBindAsync(queue: _queue, exchange: _exchange, routingKey: _routingKey);
+
+        var consumer = new AsyncEventingBasicConsumer(_channel);
+        consumer.ReceivedAsync += async (model, ea) =>
         {
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
-
             await handleMessage(message);
         };
 
-        _channel.BasicConsume(queue: _queue, autoAck: true, consumer: consumer);
-
-        return Task.CompletedTask;
+        await _channel.BasicConsumeAsync(queue: _queue, autoAck: true, consumer: consumer);
     }
 
     public void Dispose()
