@@ -1,12 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ServerMonitoringSystem.MessageProcessor.Configuration;
-using ServerMonitoringSystem.MessageProcessor.Persistence;
 using ServerMonitoringSystem.MessageProcessor.Services;
 using ServerMonitoringSystem.MessageProcessor.Services.Interfaces;
 using MessagingLibrary.Interfaces;
 using MessagingLibrary.RabbitMq;
 using ServerMonitoringSystem.Shared.Configuration;
+using ServerMonitoringSystem.Infrastructure.Settings;
+using ServerMonitoringSystem.Infrastructure.Repositories;
+using ServerMonitoringSystem.MessageProcessor.Persistence;
 
 var builder = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -22,6 +24,10 @@ var signalRConfig = configuration
     .GetSection("SignalRConfig")
     .Get<SignalRConfig>();
 
+var mongoDbSettings = configuration
+    .GetSection("MongoDbSettings")
+    .Get<MongoDbSettings>();
+
 var serverConfig = new ServerStatisticsConfig
 {
     ServerIdentifier = "Server1" 
@@ -32,9 +38,24 @@ services.AddSingleton<IConfiguration>(configuration);
 services.AddSingleton(anomalyConfig);
 services.AddSingleton(signalRConfig);
 services.AddSingleton(serverConfig);
+services.AddSingleton(mongoDbSettings);
+services.AddScoped<IStatisticsRepository, MongoDbStatisticsRepository>();
 
-services.AddSingleton<IStatisticsRepository, MongoDbStatisticsRepository>();
-services.AddSingleton<IMessageConsumer, RabbitMqConsumer>();
+
+string rabbitMqHost = "localhost";
+string exchange = "ServerExchange";
+string queue = "ServerStatsQueue";
+string routingKey = "ServerStatistics.*";
+services.AddSingleton<IMessageConsumer>(provider =>
+{
+    return new RabbitMqConsumer(
+        hostname: rabbitMqHost,
+        exchange: exchange,
+        queue: queue,
+        routingKey: routingKey
+    );
+});
+
 services.AddSingleton<ISignalRAlertSender>(provider =>
     new SignalRAlertSender(signalRConfig.SignalRUrl));
 
@@ -44,13 +65,9 @@ services.AddSingleton<IMessageProcessor>(provider =>
     var repository = provider.GetRequiredService<IStatisticsRepository>();
     var anomalyDetector = provider.GetRequiredService<IAnomalyDetector>();
     var notifier = provider.GetRequiredService<ISignalRAlertSender>();
+    var consumer = provider.GetRequiredService<IMessageConsumer>();
 
-    string rabbitMqHost = "localhost";
-    string exchange = "ServerExchange";
-    string queue = "ServerStatsQueue";
-    string routingKey = "ServerStatistics.*";
-
-    return new MessageProcessor(repository, rabbitMqHost, exchange, queue, routingKey, anomalyDetector, notifier, serverConfig);
+    return new MessageProcessor(repository, anomalyDetector, notifier, consumer, serverConfig);
 });
 
 var serviceProvider = services.BuildServiceProvider();

@@ -6,11 +6,11 @@ namespace ServerMonitoringSystem.Services;
 
 public class MonitoringService : IMonitoringService
 {
-    private readonly StatisticsCollector _collector;
+    private readonly IStatisticsCollector _collector;
     private readonly IMessagePublisher _publisher;
     private readonly ServerStatisticsConfig _config;
 
-    public MonitoringService(StatisticsCollector collector, IMessagePublisher publisher, ServerStatisticsConfig config)
+    public MonitoringService(IStatisticsCollector collector, IMessagePublisher publisher, ServerStatisticsConfig config)
     {
         _collector = collector;
         _publisher = publisher;
@@ -19,14 +19,11 @@ public class MonitoringService : IMonitoringService
 
     public async Task<ServerStatistics> RunAsync()
     {
-        while (true)
-        {
             var stats = _collector.Collect();
             var topic = $"ServerStatistics.{_config.ServerIdentifier}";
 
             await _publisher.PublishAsync(topic, stats);
 
             return stats;
-        }
     }
 }

@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MessagingLibrary\MessagingLibrary.csproj" />
+    <ProjectReference Include="..\ServerMonitoringSystem.Infrastructure\ServerMonitoringSystem.Infrastructure.csproj" />
     <ProjectReference Include="..\ServerMonitoringSystem.Shared\ServerMonitoringSystem.Shared.csproj" />
   </ItemGroup>
 
