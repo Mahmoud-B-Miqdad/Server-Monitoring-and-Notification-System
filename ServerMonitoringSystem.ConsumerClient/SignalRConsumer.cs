@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 public class SignalRConsumer
 {
     private readonly HubConnection _connection;
-
+    private const string ReceiveAlertMethod = "ReceiveAlert";
     public SignalRConsumer(string hubUrl)
     {
         _connection = new HubConnectionBuilder()
@@ -16,7 +16,7 @@ public class SignalRConsumer
 
     public void RegisterAlertHandler(Action<string, string, DateTime> handler)
     {
-        _connection.On<string, string, DateTime>("ReceiveAlert", (serverId, alertType, timestamp) =>
+        _connection.On<string, string, DateTime>(ReceiveAlertMethod, (serverId, alertType, timestamp) =>
         {
             handler(serverId, alertType, timestamp);
         });
@@ -46,6 +46,5 @@ public class SignalRConsumer
 
         return false;
     }
-
     public async Task StopAsync() => await _connection.StopAsync();
 }
