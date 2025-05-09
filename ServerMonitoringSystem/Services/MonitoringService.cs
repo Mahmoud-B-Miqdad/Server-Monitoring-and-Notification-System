@@ -1,0 +1,29 @@
+﻿using ServerMonitoringSystem.Configuration;
+using MessagingLibrary.Interfaces;
+using ServerMonitoringSystem.Domain;
+
+namespace ServerMonitoringSystem.Services;
+
+public class MonitoringService : IMonitoringService
+{
+    private readonly IStatisticsCollector _collector;
+    private readonly IMessagePublisher _publisher;
+    private readonly ServerStatisticsConfig _config;
+
+    public MonitoringService(IStatisticsCollector collector, IMessagePublisher publisher, ServerStatisticsConfig config)
+    {
+        _collector = collector;
+        _publisher = publisher;
+        _config = config;
+    }
+
+    public async Task<ServerStatistics> RunAsync()
+    {
+            var stats = _collector.Collect();
+            var topic = $"ServerStatistics.{_config.ServerIdentifier}";
+
+            await _publisher.PublishAsync(topic, stats);
+
+            return stats;
+    }
+}
