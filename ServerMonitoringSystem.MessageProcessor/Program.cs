@@ -67,7 +67,7 @@ services.AddSingleton<IMessageProcessor>(provider =>
     var notifier = provider.GetRequiredService<ISignalRAlertSender>();
     var consumer = provider.GetRequiredService<IMessageConsumer>();
 
-    return new MessageProcessor(repository, anomalyDetector, notifier, consumer);
+    return new MessageProcessor(repository, anomalyDetector, notifier, consumer, serverConfig);
 });
 
 var serviceProvider = services.BuildServiceProvider();

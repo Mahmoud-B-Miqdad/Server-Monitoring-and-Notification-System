@@ -46,8 +46,8 @@ public class SignalRAlertSender : ISignalRAlertSender
             }
         }
 
-        return false;
-    }
+            return false;
+        }
 
     public async Task SendAlertAsync(string serverId, string alertType, DateTime timestamp)
     {
