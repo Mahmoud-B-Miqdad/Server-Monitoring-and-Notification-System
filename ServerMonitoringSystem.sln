@@ -14,11 +14,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerMonitoringSystem.SignalRHub", "ServerMonitoringSystem.SignalRHub\ServerMonitoringSystem.SignalRHub.csproj", "{87588037-8370-45B7-8F49-1AD0DEB47BE6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerMonitoringSystem.ConsumerClient", "ServerMonitoringSystem.ConsumerClient\ServerMonitoringSystem.ConsumerClient.csproj", "{CCAFA8A8-9051-4C74-A473-7A46DE4EFA66}"
-<<<<<<< HEAD
-=======
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem.Infrastructure", "ServerMonitoringSystem.Infrastructure\ServerMonitoringSystem.Infrastructure.csproj", "{927AC32F-D0B0-4D1F-AA57-59D421D87FF6}"
->>>>>>> task2-message-processor
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,13 +47,10 @@ Global
 		{CCAFA8A8-9051-4C74-A473-7A46DE4EFA66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCAFA8A8-9051-4C74-A473-7A46DE4EFA66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCAFA8A8-9051-4C74-A473-7A46DE4EFA66}.Release|Any CPU.Build.0 = Release|Any CPU
-<<<<<<< HEAD
-=======
 		{927AC32F-D0B0-4D1F-AA57-59D421D87FF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{927AC32F-D0B0-4D1F-AA57-59D421D87FF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{927AC32F-D0B0-4D1F-AA57-59D421D87FF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{927AC32F-D0B0-4D1F-AA57-59D421D87FF6}.Release|Any CPU.Build.0 = Release|Any CPU
->>>>>>> task2-message-processor
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
