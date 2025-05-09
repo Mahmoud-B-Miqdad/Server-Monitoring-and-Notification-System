@@ -1,4 +1,5 @@
-﻿using ServerMonitoringSystem.Domain;
+﻿
+using ServerMonitoringSystem.Shared.Domain;
 
 public interface IMonitoringService
 {

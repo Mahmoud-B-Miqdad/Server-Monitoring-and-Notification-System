@@ -1,0 +1,6 @@
+@ServerMonitoringSystem.SignalRHub_HostAddress = http://localhost:5259
+
+GET {{ServerMonitoringSystem.SignalRHub_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
