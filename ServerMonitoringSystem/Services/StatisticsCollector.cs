@@ -8,9 +8,9 @@ public class StatisticsCollector : IStatisticsCollector
 {
     public ServerStatistics Collect()
     {
-        float cpuUsage = GetCpuUsage();
-        float availableMemory = GetAvailableMemory();
-        float usedMemory = GetUsedMemory();
+        float cpuUsage = FixValue(GetCpuUsage());
+        float availableMemory = FixValue(GetAvailableMemory());
+        float usedMemory = FixValue(GetUsedMemory());
 
         return new ServerStatistics
         {
@@ -19,6 +19,11 @@ public class StatisticsCollector : IStatisticsCollector
             MemoryUsage = usedMemory,
             Timestamp = DateTime.Now
         };
+    }
+
+    private float FixValue(float value)
+    {
+        return float.IsNaN(value) || float.IsInfinity(value) ? 0 : value;
     }
 
     private float GetCpuUsage()
@@ -81,7 +86,7 @@ public class StatisticsCollector : IStatisticsCollector
             var memFreeLine = lines.FirstOrDefault(l => l.StartsWith("MemAvailable"));
             if (memFreeLine == null) return 0;
             var parts = memFreeLine.Split(':', StringSplitOptions.RemoveEmptyEntries);
-            return float.Parse(parts[1].Trim().Split(' ')[0]) / 1024; // KB to MB
+            return float.Parse(parts[1].Trim().Split(' ')[0]) / 1024; 
         }
     }
 

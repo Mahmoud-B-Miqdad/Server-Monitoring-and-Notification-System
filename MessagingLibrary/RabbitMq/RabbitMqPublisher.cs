@@ -30,7 +30,13 @@ public class RabbitMqPublisher : IMessagePublisher
 
     public async Task PublishAsync<T>(string routingKey, T message)
     {
-        var factory = new ConnectionFactory { HostName = _hostname };
+        var factory = new ConnectionFactory
+        {
+            HostName = _hostname,
+            Port = 5672,
+            UserName = "guest",
+            Password = "guest"
+        };
 
         using var connection = await factory.CreateConnectionAsync();
         using var channel = await connection.CreateChannelAsync();
