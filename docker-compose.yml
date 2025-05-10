@@ -1,0 +1,29 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - monitoring-network
+
+  message-publisher:
+    build:
+      context: .
+      dockerfile: ServerMonitoringSystem/Dockerfile
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_EXCHANGE: ServerExchange
+      RABBITMQ_EXCHANGE_TYPE: topic
+      SAMPLING_INTERVAL_SECONDS: 20
+      SERVER_IDENTIFIER: linux-docker-1
+    networks:
+      - monitoring-network
+
+networks:
+  monitoring-network:
