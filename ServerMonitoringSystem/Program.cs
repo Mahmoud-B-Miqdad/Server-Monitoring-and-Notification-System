@@ -1,22 +1,22 @@
 ﻿using MessagingLibrary.Interfaces;
 using MessagingLibrary.RabbitMq;
-using Microsoft.Extensions.Configuration;
 using ServerMonitoringSystem.Services;
 using ServerMonitoringSystem.Shared.Configuration;
 
-var builder = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+var samplingInterval = int.Parse(Environment.GetEnvironmentVariable("SAMPLING_INTERVAL_SECONDS") ?? "10");
+var serverIdentifier = Environment.GetEnvironmentVariable("SERVER_IDENTIFIER") ?? "default-server";
 
-var configuration = builder.Build();
-
-var config = configuration.GetSection("ServerStatisticsConfig").Get<ServerStatisticsConfig>();
+var config = new ServerStatisticsConfig
+{
+    SamplingIntervalSeconds = samplingInterval,
+    ServerIdentifier = serverIdentifier
+};
 
 var collector = new StatisticsCollector();
 
-var hostName = "localhost";
-var exchangeName = "ServerExchange";
-var exchangeType = "topic";
+var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "localhost";
+var exchangeName = Environment.GetEnvironmentVariable("RABBITMQ_EXCHANGE") ?? "ServerExchange";
+var exchangeType = Environment.GetEnvironmentVariable("RABBITMQ_EXCHANGE_TYPE") ?? "topic";
 
 IMessagePublisher? publisher = null;
 
@@ -37,8 +37,7 @@ try
     {
         var stats = await monitoringService.RunAsync();
 
-        Console.WriteLine(
-            $"[INFO] Published stats: CPU={stats.CpuUsage}%, Memory={stats.MemoryUsage}MB, Available={stats.AvailableMemory}MB");
+        Console.WriteLine($"[INFO] Published stats: CPU={stats.CpuUsage}%, Memory={stats.MemoryUsage}MB, Available={stats.AvailableMemory}MB");
 
         await Task.Delay(config.SamplingIntervalSeconds * 1000);
     }
