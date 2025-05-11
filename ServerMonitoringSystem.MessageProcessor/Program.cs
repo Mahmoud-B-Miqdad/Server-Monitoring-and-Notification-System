@@ -22,13 +22,23 @@ var signalRConfig = new SignalRConfig
     SignalRUrl = Environment.GetEnvironmentVariable("SIGNALR_URL") ?? "https://localhost:7271/hub/alerts"
 };
 
-var MongoDbConnection = "mongodb+srv://mahmoudbmiqdad:mahmoud123@cluster0.bx8augs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-var mongoDbSettings = new MongoDbSettings
+try
 {
-    MongoDbConnection = Environment.GetEnvironmentVariable("MONGODB_CONNECTION") ?? MongoDbConnection,
-    DatabaseName = Environment.GetEnvironmentVariable("MONGODB_DATABASE") ?? "ServerMonitoring",
-    CollectionName = Environment.GetEnvironmentVariable("MONGODB_COLLECTION") ?? "Statistics"
-};
+   var mongoDbSettings = new MongoDbSettings
+    {
+        MongoDbConnection = Environment.GetEnvironmentVariable("MONGODB_CONNECTION")
+                            ?? throw new InvalidOperationException("MONGODB_CONNECTION is not set."),
+        DatabaseName = Environment.GetEnvironmentVariable("MONGODB_DATABASE")
+                            ?? throw new InvalidOperationException("MONGODB_DATABASE is not set."),
+        CollectionName = Environment.GetEnvironmentVariable("MONGODB_COLLECTION")
+                            ?? throw new InvalidOperationException("MONGODB_COLLECTION is not set.")
+    };
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error initializing MongoDbSettings: {ex.Message}");
+}
+
 
 var serverConfig = new ServerStatisticsConfig
 {
