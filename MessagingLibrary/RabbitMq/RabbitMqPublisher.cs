@@ -11,8 +11,11 @@ public class RabbitMqPublisher : IMessagePublisher
     private readonly string _hostname;
     private readonly string _exchange;
     private readonly string _exchangeType;
+    private readonly int _port;
+    private readonly string _username;
+    private readonly string _password;
 
-    public RabbitMqPublisher(string hostname, string exchange, string exchangeType)
+    public RabbitMqPublisher(string hostname, string exchange, string exchangeType, int port, string username, string password)
     {
         if (string.IsNullOrWhiteSpace(hostname))
             throw new ArgumentNullException(nameof(hostname), "Hostname cannot be null or empty.");
@@ -26,6 +29,9 @@ public class RabbitMqPublisher : IMessagePublisher
         _hostname = hostname;
         _exchange = exchange;
         _exchangeType = exchangeType;
+        _port = port;
+        _username = username;
+        _password = password;
     }
 
     public async Task PublishAsync<T>(string routingKey, T message)
@@ -33,9 +39,9 @@ public class RabbitMqPublisher : IMessagePublisher
         var factory = new ConnectionFactory
         {
             HostName = _hostname,
-            Port = int.Parse(Environment.GetEnvironmentVariable("RABBITMQ_PORT") ?? throw new InvalidOperationException("Missing environment variable: RABBITMQ_PORT")),
-            UserName = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? throw new InvalidOperationException("Missing environment variable: RABBITMQ_USERNAME"),
-            Password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? throw new InvalidOperationException("Missing environment variable: RABBITMQ_PASSWORD")
+            Port = _port,
+            UserName = _username,
+            Password = _password 
         };
 
         using var connection = await factory.CreateConnectionAsync();

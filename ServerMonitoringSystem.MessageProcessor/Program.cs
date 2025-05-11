@@ -22,9 +22,11 @@ var signalRConfig = new SignalRConfig
     SignalRUrl = Environment.GetEnvironmentVariable("SIGNALR_URL") ?? "https://localhost:7271/hub/alerts"
 };
 
+MongoDbSettings mongoDbSettings;
+
 try
 {
-   var mongoDbSettings = new MongoDbSettings
+    mongoDbSettings = new MongoDbSettings
     {
         MongoDbConnection = Environment.GetEnvironmentVariable("MONGODB_CONNECTION")
                             ?? throw new InvalidOperationException("MONGODB_CONNECTION is not set."),
@@ -37,6 +39,7 @@ try
 catch (Exception ex)
 {
     Console.WriteLine($"Error initializing MongoDbSettings: {ex.Message}");
+    throw; 
 }
 
 
