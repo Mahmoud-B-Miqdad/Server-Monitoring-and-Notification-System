@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using ServerMonitoringSystem.MessageProcessor.Configuration;
 using ServerMonitoringSystem.MessageProcessor.Services;
 using ServerMonitoringSystem.MessageProcessor.Services.Interfaces;
@@ -10,31 +9,33 @@ using ServerMonitoringSystem.Infrastructure.Settings;
 using ServerMonitoringSystem.Infrastructure.Repositories;
 using ServerMonitoringSystem.MessageProcessor.Persistence;
 
-var builder = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+var anomalyConfig = new AnomalyDetectionConfig
+{
+    MemoryUsageAnomalyThresholdPercentage = double.Parse(Environment.GetEnvironmentVariable("MEMORY_ANOMALY_THRESHOLD") ?? "0.4"),
+    CpuUsageAnomalyThresholdPercentage = double.Parse(Environment.GetEnvironmentVariable("CPU_ANOMALY_THRESHOLD") ?? "0.5"),
+    MemoryUsageThresholdPercentage = double.Parse(Environment.GetEnvironmentVariable("MEMORY_USAGE_THRESHOLD") ?? "0.8"),
+    CpuUsageThresholdPercentage = double.Parse(Environment.GetEnvironmentVariable("CPU_USAGE_THRESHOLD") ?? "0.9")
+};
 
-var configuration = builder.Build();
+var signalRConfig = new SignalRConfig
+{
+    SignalRUrl = Environment.GetEnvironmentVariable("SIGNALR_URL") ?? "https://localhost:7271/hub/alerts"
+};
 
-var anomalyConfig = configuration
-    .GetSection("AnomalyDetectionConfig")
-    .Get<AnomalyDetectionConfig>();
-
-var signalRConfig = configuration
-    .GetSection("SignalRConfig")
-    .Get<SignalRConfig>();
-
-var mongoDbSettings = configuration
-    .GetSection("MongoDbSettings")
-    .Get<MongoDbSettings>();
+var MongoDbConnection = "mongodb+srv://mahmoudbmiqdad:mahmoud123@cluster0.bx8augs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+var mongoDbSettings = new MongoDbSettings
+{
+    MongoDbConnection = Environment.GetEnvironmentVariable("MONGODB_CONNECTION") ?? MongoDbConnection,
+    DatabaseName = Environment.GetEnvironmentVariable("MONGODB_DATABASE") ?? "ServerMonitoring",
+    CollectionName = Environment.GetEnvironmentVariable("MONGODB_COLLECTION") ?? "Statistics"
+};
 
 var serverConfig = new ServerStatisticsConfig
 {
-    ServerIdentifier = "Server1" 
+    ServerIdentifier = Environment.GetEnvironmentVariable("SERVER_IDENTIFIER") ?? "Server1"
 };
 
 var services = new ServiceCollection();
-services.AddSingleton<IConfiguration>(configuration);
 services.AddSingleton(anomalyConfig);
 services.AddSingleton(signalRConfig);
 services.AddSingleton(serverConfig);
@@ -42,10 +43,11 @@ services.AddSingleton(mongoDbSettings);
 services.AddScoped<IStatisticsRepository, MongoDbStatisticsRepository>();
 
 
-string rabbitMqHost = "localhost";
-string exchange = "ServerExchange";
-string queue = "ServerStatsQueue";
-string routingKey = "ServerStatistics.*";
+string rabbitMqHost = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "localhost";
+string exchange = Environment.GetEnvironmentVariable("RABBITMQ_EXCHANGE") ?? "ServerExchange";
+string queue = Environment.GetEnvironmentVariable("RABBITMQ_QUEUE") ?? "ServerStatsQueue";
+string routingKey = Environment.GetEnvironmentVariable("RABBITMQ_ROUTING_KEY") ?? "ServerStatistics.*";
+
 services.AddSingleton<IMessageConsumer>(provider =>
 {
     return new RabbitMqConsumer(
