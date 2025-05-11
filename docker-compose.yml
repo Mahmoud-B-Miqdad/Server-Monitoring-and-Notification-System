@@ -21,5 +21,16 @@ services:
     networks:
       - monitoring-network
 
+  message-processor:
+    build:
+      context: .
+      dockerfile: ServerMonitoringSystem.MessageProcessor/Dockerfile
+    depends_on:
+      - rabbitmq
+    env_file:
+      - ./ServerMonitoringSystem.MessageProcessor/.env
+    networks:
+      - monitoring-network
+
 networks:
   monitoring-network:
