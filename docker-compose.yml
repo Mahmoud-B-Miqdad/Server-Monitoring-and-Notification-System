@@ -16,12 +16,8 @@ services:
       dockerfile: ServerMonitoringSystem/Dockerfile
     depends_on:
       - rabbitmq
-    environment:
-      RABBITMQ_HOST: rabbitmq
-      RABBITMQ_EXCHANGE: ServerExchange
-      RABBITMQ_EXCHANGE_TYPE: topic
-      SAMPLING_INTERVAL_SECONDS: 20
-      SERVER_IDENTIFIER: linux-docker-1
+    env_file:
+      - ./ServerMonitoringSystem/.env
     networks:
       - monitoring-network
 
