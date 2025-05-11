@@ -41,6 +41,19 @@ services:
     networks:
       - monitoring-network
 
+  signalr-consumer:
+    build:
+      context: .
+      dockerfile: ServerMonitoringSystem.ConsumerClient/Dockerfile
+    depends_on:
+      - signalr-hub
+    env_file:
+      - ./ServerMonitoringSystem.ConsumerClient/.env
+    networks:
+      - monitoring-network
+
+
+
 
 
 networks:

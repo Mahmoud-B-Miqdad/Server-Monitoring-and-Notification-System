@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using SignalREventConsumer;
 
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
-    .Build();
-
-string hubUrl = configuration["SignalRConfig:SignalRUrl"];
+string? hubUrl = Environment.GetEnvironmentVariable("SIGNALR_URL");
+if (string.IsNullOrEmpty(hubUrl))
+{
+    Console.WriteLine("SIGNALR_URL environment variable is not set.");
+    return;
+}
 
 var client = new SignalRConsumer(hubUrl);
 
@@ -28,5 +28,5 @@ if (!connected)
 Console.WriteLine("Connected to SignalR hub. Listening for alerts...");
 Console.WriteLine("Press any key to exit.");
 
-Console.ReadKey();
+await Task.Delay(Timeout.Infinite);
 await client.StopAsync();
