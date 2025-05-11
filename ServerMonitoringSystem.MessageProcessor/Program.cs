@@ -84,4 +84,4 @@ if (!startedSuccessfully)
 }
 
 Console.WriteLine("Listening to server statistics. Press any key to exit...");
-Console.ReadKey();
+await Task.Delay(-1);

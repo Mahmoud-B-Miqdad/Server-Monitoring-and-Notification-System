@@ -32,5 +32,16 @@ services:
     networks:
       - monitoring-network
 
+  signalr-hub:
+    build:
+      context: .
+      dockerfile: ServerMonitoringSystem.SignalRHub/Dockerfile
+    ports:
+      - "7271:8080"
+    networks:
+      - monitoring-network
+
+
+
 networks:
   monitoring-network:
