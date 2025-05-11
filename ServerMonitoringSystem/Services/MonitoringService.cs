@@ -19,11 +19,18 @@ public class MonitoringService : IMonitoringService
 
     public async Task<ServerStatistics> RunAsync()
     {
-            var stats = _collector.Collect();
-            var topic = $"ServerStatistics.{_config.ServerIdentifier}";
+        var stats = _collector.Collect();
+        var topic = $"ServerStatistics.{_config.ServerIdentifier}";
 
+        try
+        {
             await _publisher.PublishAsync(topic, stats);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error initializing RabbitMq: {ex.Message}");
+        }
 
-            return stats;
+        return stats;
     }
 }

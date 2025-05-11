@@ -33,9 +33,9 @@ public class RabbitMqPublisher : IMessagePublisher
         var factory = new ConnectionFactory
         {
             HostName = _hostname,
-            Port = 5672,
-            UserName = "guest",
-            Password = "guest"
+            Port = int.Parse(Environment.GetEnvironmentVariable("RABBITMQ_PORT") ?? throw new InvalidOperationException("Missing environment variable: RABBITMQ_PORT")),
+            UserName = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? throw new InvalidOperationException("Missing environment variable: RABBITMQ_USERNAME"),
+            Password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? throw new InvalidOperationException("Missing environment variable: RABBITMQ_PASSWORD")
         };
 
         using var connection = await factory.CreateConnectionAsync();
