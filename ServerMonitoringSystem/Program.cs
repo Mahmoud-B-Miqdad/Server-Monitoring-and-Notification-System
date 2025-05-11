@@ -38,9 +38,9 @@ try
                        Environment.GetEnvironmentVariable("RABBITMQ_EXCHANGE_TYPE") ??
                        throw new InvalidOperationException("RABBITMQ_EXCHANGE_TYPE is not set.");
 
-    var portString = configuration["RabbitMqConfig:Port"] ??
-                 int.Parse(Environment.GetEnvironmentVariable("RABBITMQ_PORT") ??
-                 throw new InvalidOperationException("Missing configuration: RABBITMQ_PORT");
+    var portString = configuration["RabbitMqConfig:Port"]
+        ?? Environment.GetEnvironmentVariable("RABBITMQ_PORT")
+        ?? throw new InvalidOperationException("Missing configuration: RABBITMQ_PORT");
 
     var Port = int.Parse(portString);
 
