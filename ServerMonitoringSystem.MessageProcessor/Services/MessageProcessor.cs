@@ -36,7 +36,7 @@ public class MessageProcessor : IMessageProcessor
             var stats = JsonSerializer.Deserialize<ServerStatistics>(message);
             if (stats != null)
             {
-                //await _repository.SaveStatisticsAsync(stats);
+                await _repository.SaveStatisticsAsync(stats);
                 var alerts = _anomalyDetector.Analyze(stats);
                 foreach (var alert in alerts)
                 {
