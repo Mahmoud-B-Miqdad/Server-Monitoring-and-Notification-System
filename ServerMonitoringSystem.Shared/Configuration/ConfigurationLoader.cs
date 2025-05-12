@@ -19,10 +19,17 @@ public static class ConfigurationLoader
             {
                 var envValue = envVariables[envKey]?.ToString();
 
-                if (!string.IsNullOrWhiteSpace(envValue));
+                if (!string.IsNullOrWhiteSpace(envValue))
                 {
-                    var convertedValue = Convert.ChangeType(envValue, prop.PropertyType);
-                    prop.SetValue(config, convertedValue);
+                    try
+                    {
+                        var convertedValue = Convert.ChangeType(envValue, prop.PropertyType);
+                        prop.SetValue(config, convertedValue);
+                    }
+                    catch
+                    {
+                        throw;
+                    }
                 }
             }
         }

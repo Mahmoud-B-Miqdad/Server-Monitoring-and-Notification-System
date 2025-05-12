@@ -21,13 +21,7 @@ try
 
     try
     {
-        publisher = new RabbitMqPublisher(
-            rabbitMqConfig.Host,
-            rabbitMqConfig.Exchange,
-            rabbitMqConfig.ExchangeType,
-            rabbitMqConfig.Port,
-            rabbitMqConfig.Username,
-            rabbitMqConfig.Password);     
+        publisher = new RabbitMqPublisher(rabbitMqConfig);     
     }
     catch (ArgumentNullException ex)
     {

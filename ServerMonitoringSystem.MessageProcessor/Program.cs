@@ -32,7 +32,7 @@ try
     services.AddScoped<IStatisticsRepository, MongoDbStatisticsRepository>();
 
     services.AddSingleton<IMessageConsumer>(_ =>
-        new RabbitMqConsumer(rabbitMqConfig.Host, rabbitMqConfig.Exchange, rabbitMqConfig.Queue, rabbitMqConfig.RoutingKey));
+        new RabbitMqConsumer(rabbitMqConfig.RabbitHost, rabbitMqConfig.Exchange, rabbitMqConfig.Queue, rabbitMqConfig.RoutingKey));
 
     services.AddSingleton<ISignalRAlertSender>(_ =>
         new SignalRAlertSender(signalRConfig.SignalRUrl));

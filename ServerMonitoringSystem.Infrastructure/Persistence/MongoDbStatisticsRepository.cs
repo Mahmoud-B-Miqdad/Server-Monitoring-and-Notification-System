@@ -12,8 +12,8 @@ public class MongoDbStatisticsRepository : IStatisticsRepository
     public MongoDbStatisticsRepository(MongoDbSettings settings)
     {
         var client = new MongoClient(settings.MongoDbConnection);
-        var database = client.GetDatabase(settings.DatabaseName);
-        _statisticsCollection = database.GetCollection<ServerStatistics>(settings.CollectionName);
+        var database = client.GetDatabase(settings.Database);
+        _statisticsCollection = database.GetCollection<ServerStatistics>(settings.Collection);
     }
 
     public async Task SaveStatisticsAsync(ServerStatistics stats)
