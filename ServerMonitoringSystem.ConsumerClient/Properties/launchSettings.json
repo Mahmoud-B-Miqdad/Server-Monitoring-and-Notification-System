@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ServerMonitoringSystem.ConsumerClient": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

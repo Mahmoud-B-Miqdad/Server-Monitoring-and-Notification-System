@@ -15,7 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerMonitoringSystem.Sign
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerMonitoringSystem.ConsumerClient", "ServerMonitoringSystem.ConsumerClient\ServerMonitoringSystem.ConsumerClient.csproj", "{CCAFA8A8-9051-4C74-A473-7A46DE4EFA66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerMonitoringSystem.Infrastructure", "ServerMonitoringSystem.Infrastructure\ServerMonitoringSystem.Infrastructure.csproj", "{927AC32F-D0B0-4D1F-AA57-59D421D87FF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerMonitoringSystem.Infrastructure", "ServerMonitoringSystem.Infrastructure\ServerMonitoringSystem.Infrastructure.csproj", "{927AC32F-D0B0-4D1F-AA57-59D421D87FF6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{03C381C9-F2CA-423F-83B0-A427EDED7236}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

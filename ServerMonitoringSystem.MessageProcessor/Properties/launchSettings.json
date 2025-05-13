@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ServerMonitoringSystem.MessageProcessor": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

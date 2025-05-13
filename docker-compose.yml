@@ -1,0 +1,56 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - monitoring-network
+
+  message-publisher:
+    build:
+      context: .
+      dockerfile: ServerMonitoringSystem/Dockerfile
+    depends_on:
+      - rabbitmq
+    env_file:
+      - ./ServerMonitoringSystem/.env
+    networks:
+      - monitoring-network
+
+  message-processor:
+    build:
+      context: .
+      dockerfile: ServerMonitoringSystem.MessageProcessor/Dockerfile
+    depends_on:
+      - rabbitmq
+    env_file:
+      - ./ServerMonitoringSystem.MessageProcessor/.env
+    networks:
+      - monitoring-network
+
+  signalr-hub:
+    build:
+      context: .
+      dockerfile: ServerMonitoringSystem.SignalRHub/Dockerfile
+    ports:
+      - "7271:8080"
+    networks:
+      - monitoring-network
+
+  signalr-consumer:
+    build:
+      context: .
+      dockerfile: ServerMonitoringSystem.ConsumerClient/Dockerfile
+    depends_on:
+      - signalr-hub
+    env_file:
+      - ./ServerMonitoringSystem.ConsumerClient/.env
+    networks:
+      - monitoring-network
+
+networks:
+  monitoring-network:
