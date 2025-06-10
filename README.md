@@ -55,6 +55,8 @@ Server-Monitoring-and-Notification-System/
 ├── docker-compose.yml                    # Full system orchestration
 └── README.md                             # Project documentation
 ```
+---
+
 ## ⚙️ How It Works
 
 ---
@@ -101,5 +103,6 @@ To build and run all services using Docker Compose:
 ```bash
 # Build & Run all services
 docker-compose up --build
+```
 
 ✅ All services (Publisher, Consumer, SignalR Hub, MongoDB, RabbitMQ) will be up and integrated automatically
